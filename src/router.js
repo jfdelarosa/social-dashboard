@@ -1,23 +1,34 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+
+import App from './views/App.vue'
 import Login from './views/Login.vue'
+
 
 Vue.use(Router)
 
-export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const router = new Router({
   routes: [
     {
       path: '/',
+      redirect: '/login'
+    },
+    {
+      path: '/login',
       name: 'login',
-      component: Home
+      component: Login
     },
     {
       path: '/app',
       name: 'app',
-      component: Home
+      component: App,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })
+
+export default router

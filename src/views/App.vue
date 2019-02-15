@@ -14,12 +14,12 @@
 <script>
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import myLogin from "../components/Login.vue"
+import myLogin from "../components/MyLogin.vue"
 export default {
   components: {
     myLogin
   },
-  name: 'home',
+  name: 'app',
   data(){
     return {
       loading: false,

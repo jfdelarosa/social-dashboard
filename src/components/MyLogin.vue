@@ -12,7 +12,7 @@ import 'firebase/auth'
 
 export default{
   props: ["type"],
-  name: "login",
+  name: "myLogin",
   data(){
     return {
       config: {
