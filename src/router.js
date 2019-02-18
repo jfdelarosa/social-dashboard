@@ -10,6 +10,7 @@ import Login from './views/Login.vue'
 Vue.use(Router)
 
 const router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -24,9 +25,9 @@ const router = new Router({
       path: '/app',
       name: 'app',
       component: App,
-      meta: {
-        requiresAuth: true
-      }
+      // meta: {
+      //   requiresAuth: true
+      // }
     }
   ]
 })

@@ -1,8 +1,8 @@
 <template lang="pug">
   el-card
-    el-button.w100(:type="type" v-on:click="auth(type)" :loading="config[type].loading")
-      font-awesome-icon(:icon="['fab', type]" v-show="!config[type].loading")
-      span(v-show="!config[type].loading") &nbsp;
+    el-button.w100(:type="type" v-on:click="auth(type)" :loading="loading")
+      font-awesome-icon(:icon="['fab', type]" v-show="!loading")
+      span(v-show="!loading") &nbsp;
       | Entrar con {{type}}
 </template>
 
@@ -15,54 +15,38 @@ export default{
   name: "myLogin",
   data(){
     return {
+      response: "",
       config: {
-        instagram: {
-          loading: false
-        },
-        google: {
-          loading: false
-        },
-        twitter: {
-          loading: false
-        },
-        facebook: {
-          loading: false
-        }
       }
+    }
+  },
+  computed: {
+    loading(){
+      return this.$store.getters.loading(this.type)
     }
   },
   methods: {
     auth(type) {
-      this.config[type].loading = true
+      this.$store.commit('SET_LOADING', {client: this.type, status: true})
       switch (type){
         case "instagram":
           console.log("Aun no :(")
         break;
         case "google":
-          this.signIn(type, new firebase.auth.GoogleAuthProvider())
+          this.signIn(type)
         break;
         case "twitter":
-          this.signIn(type, new firebase.auth.TwitterAuthProvider())
+          this.signIn(type)
         break;
         case "facebook":
-          this.signIn(type, new firebase.auth.FacebookAuthProvider())
+          this.signIn(type)
         break;
       }
     },
-    signIn(type, provider){
-      firebase.auth().signInWithPopup(provider).then((result) => {
-        var token = result.credential.accessToken;
-        var secret = result.credential.secret;
-        var user = result.user;
-        console.log(result)
-      }).catch((error) => {
-        console.log(error)
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        var email = error.email;
-        var credential = error.credential;
-      });
-      this.config[type].loading = false
+    signIn(provider){
+      setTimeout(() => {
+        this.$store.commit('SET_LOADING', {client: this.type, status: false})
+      }, 1000)
     }
   }
 }

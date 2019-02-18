@@ -14,36 +14,33 @@ import 'element-ui/lib/theme-chalk/reset.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import axios from 'axios'
 
 import firebase from 'firebase/app'
+import 'firebase/auth'
 
-const config = {
+import axios from "axios"
+
+Vue.prototype.$http = axios
+
+firebase.initializeApp({
   apiKey: "AIzaSyBWz6cbSDO0SVk3FZAh-g3U52boGyPNAKo",
   authDomain: "qp-social-dashboard.firebaseapp.com",
   databaseURL: "https://qp-social-dashboard.firebaseio.com",
   projectId: "qp-social-dashboard",
   storageBucket: "qp-social-dashboard.appspot.com",
   messagingSenderId: "852878284719"
-}
-
-firebase.initializeApp(config)
+});
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(ElementUI);
-
-Vue.prototype.$http = axios
 
 library.add(fab)
 locale.use(lang);
 
 Vue.config.productionTip = false
 
-firebase.auth().onAuthStateChanged(() => {
-  new Vue({
-    router,
-    store,
-    render: h => h(App)
-  }).$mount('#app')
-})
-
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#app')
