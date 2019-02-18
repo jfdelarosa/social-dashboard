@@ -1,17 +1,30 @@
 <template lang="pug">
   el-card(v-loading="loading")
-    h1.title {{value}}
+    el-alert(v-if="error" title="Error al cargar el widget" type="error" show-icon :closable="false")
+    h1.title(v-if="!error") {{value}}
     h3.subtitle {{label}}
 </template>
 
 <script>
   export default{
     name: "Metric",
-    props: ["label", "value", "loading"]
+    props: {    
+      label: String,
+      value: Number,
+      loading: Boolean,
+      error: Boolean
+    }
   }
 </script>
 
 <style scoped>
+.el-badge{
+  width: 100%;
+}
+.el-badge__content.is-fixed{
+  top: 1rem!important;
+  right: 3rem!important;
+}
 .el-card{
   height: 100%;
   display: flex;

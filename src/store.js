@@ -1,53 +1,72 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    clients: {
-      instagram: {
+    clients: [
+      {
+        name: "instagram",
         conected: false,
         loading: false,
-        data: {}
+        provider: {}
       },
-      google: {
+      {
+        name: "google",
         conected: false,
         loading: false,
-        data: {}
+        provider: {}
       },
-      twitter: {
+      {
+        name: "twitter",
         conected: false,
         loading: false,
-        data: {}
+        provider: {}
       },
-      facebook: {
+      {
+        name: "facebook",
         conected: false,
         loading: false,
-        data: {}
+        provider: {}
       }
-    }
+    ],
+    layout: []
   },
   mutations: {
     SET_LOADING: (state, payload) => {
-      state.clients[payload.client].loading = payload.status
+      state.clients.filter(prov => { return prov.name == payload.client })[0].loading = payload.status
     },
     SET_STATUS: (state, payload) => {
-      state.clients[payload.client].conected = payload.status
+      state.clients.filter(prov => { return prov.name == payload.client })[0].conected = payload.status
     },
     SET_DATA: (state, payload) => {
-      state.clients[payload.client].data = payload.data
+      state.clients.filter(prov => { return prov.name == payload.client })[0].provider = payload.provider
+    },
+    SET_LAYOUT: (state, payload) => {
+      state.layout = payload
+    },
+    ADD_WIDGET: (state, payload) => {
+      state.layout.push(payload)
     }
   },
   getters: {
     loading: (state) => (client) => {
-      return state.clients[client].loading
+      return state.clients.filter(prov => { return prov.name == client })[0].loading
     },
     status: (state) => (client) => {
-      return state.clients[client].conected
+      return state.clients.filter(prov => { return prov.name == client })[0].conected
     },
-    status: (state) => (client) => {
-      return state.clients[client].data
+    provider: (state) => (client) => {
+      return state.clients.filter(prov => { return prov.name == client })[0].provider
+    },
+    layout(state){
+      return state.layout
+    },
+    clients(state){
+      return state.clients
     }
-  }
+  },
+  plugins: [createPersistedState()]
 })

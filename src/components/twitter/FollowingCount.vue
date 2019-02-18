@@ -1,5 +1,5 @@
 <template lang="pug">
-  metric(label="Followers" :value="count" :loading="loading" :error="error")
+  metric(label="Following" :value="count" :loading="loading" :error="error")
 </template>
 
 <script>
@@ -24,7 +24,7 @@ export default{
   },
   mounted(){
     this.loading = true
-    this.$http.get("http://localhost:8888/social-api/twitter/followers/" + this.uid)
+    this.$http.get("http://localhost:8888/social-api/twitter/following/" + this.uid)
     .then((res) => {
       if(res.data.error || res.data.errors){
         this.error = true
