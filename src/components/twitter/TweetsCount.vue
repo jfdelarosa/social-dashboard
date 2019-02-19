@@ -1,12 +1,12 @@
 <template lang="pug">
-  metric(label="Following" :value="count" :loading="loading" :error="error")
+  metric(label="Tweets" :value="count" :loading="loading" :error="error")
 </template>
 
 <script>
 import Metric from "../Metric.vue"
 import jsonp from "jsonp"
 export default{
-  name: "FollowersCount",
+  name: "TweetsCount",
   components: {
     Metric
   },
@@ -29,7 +29,7 @@ export default{
       if(res.data.error || res.data.errors){
         this.error = true
       }else{
-        this.count = res.data.friends_count
+        this.count = res.data.statuses_count
       }
       this.loading = false
     })

@@ -24,12 +24,12 @@ export default{
   },
   mounted(){
     this.loading = true
-    this.$http.get("http://localhost:8888/social-api/twitter/followers/" + this.uid)
+    this.$http.get("http://localhost:8888/social-api/twitter/users/" + this.uid)
     .then((res) => {
       if(res.data.error || res.data.errors){
         this.error = true
       }else{
-        this.count = res.data.ids.length
+        this.count = res.data.followers_count
       }
       this.loading = false
     })

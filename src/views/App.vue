@@ -1,12 +1,19 @@
 <template lang="pug">
   el-container
     el-main
-      el-button(v-on:click="dialogVisible = true") Add Widget
-      el-button(v-on:click="reset") Reset Layout
+      div(style="margin-bottom: 1rem")
+        el-button(v-on:click="dialogVisible = true") Add Widget
+        el-button(v-on:click="reset") Reset Layout
       el-dialog(title="Add Widget" :visible.sync="dialogVisible")
-        el-collapse(v-model="activeNames" @change="handleChange")
-          el-collapse-item(v-for="provider in providers" :title="provider.name" name="provider.name")
-            div {{providers}}
+        el-collapse(v-model="activeNames")
+          el-collapse-item(v-for="(provider, key) in providers" :title="provider.name" :name="key + 1")
+            el-table(:data="componentList[provider.name]")
+              el-table-column(type="index" label="#")
+              el-table-column(prop="name" label="Nombre" width="120")
+              el-table-column(prop="desc" label="Descripción")
+              el-table-column(label="Opciones" width="120")
+                template(slot-scope="scope")
+                  el-button(v-on:click="addWidget(scope.row.component)" size="mini") Agregar
 
       dnd-grid-container(:layout.sync="layout" :cellSize="cellSize" :maxColumnCount="maxColumnCount" :maxRowCount="maxRowCount" :margin="margin" :bubbleUp="bubbleUp")
         dnd-grid-box(v-for="(value, key) in layout" :boxId="value.id" :key="value.id")
@@ -32,16 +39,60 @@ export default {
     return {
       dialogVisible: false,
       loading: false,
+      activeNames: [],
       apps: ["instagram", "google", "twitter", "facebook"],
-      components: {
+      componentList: {
         twitter: [
           {
-            name: "Followers"
-            component: "FollowersCount"
+            name: "Followers",
+            desc: "Muestra el numero de followers",
+            component: {
+              id: btoa(Math.random()).substring(0,12),
+              component: "FollowersCount",
+              network: "twitter",
+              hidden: false,
+              pinned: false,
+              position: {
+                x: 0,
+                y: 0,
+                w: 2,
+                h: 1
+              }
+            }
           },
           {
-            name: "Following"
-            component: "FollowingCount"
+            name: "Following",
+            desc: "Muestra el numero de following",
+            component: {
+              id: btoa(Math.random()).substring(0,12),
+              component: "FollowingCount",
+              network: "twitter",
+              hidden: false,
+              pinned: false,
+              position: {
+                x: 0,
+                y: 0,
+                w: 2,
+                h: 1
+              }
+            }
+          },
+          {
+            name: "Tweets",
+            desc: "Muestra el numero de tweets",
+            component: {
+              id: btoa(Math.random()).substring(0,12),
+              component: "TweetsCount",
+              network: "twitter",
+              hidden: false,
+              pinned: false,
+              position: {
+                x: 0,
+                y: 0,
+                w: 2,
+                h: 1
+              }
+            }
           }
         ]
       },
@@ -57,9 +108,7 @@ export default {
   },
   computed: {
     providers(){
-      let providers = this.$store.getters.clients.filter(prov => prov.conected)
-      return providers
-      console.log(providers)
+      return this.$store.getters.clients.filter(prov => prov.conected)
     },
     layout: {
       get(){
@@ -77,20 +126,9 @@ export default {
     reset(){
       this.$store.commit('SET_LAYOUT', [])
     },
-    addWidget(){
-      this.$store.commit('ADD_WIDGET', {
-        id: Date.now(),
-        component: "FollowingCount",
-        network: "twitter",
-        hidden: false,
-        pinned: false,
-        position: {
-          x: 0,
-          y: 0,
-          w: 2,
-          h: 1
-        }
-      })
+    addWidget(component){
+      this.$store.commit('ADD_WIDGET', component)
+      this.dialogVisible = false
     }
   },
   mounted(){
