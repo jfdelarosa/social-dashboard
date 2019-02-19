@@ -20,7 +20,10 @@ import 'firebase/auth'
 
 import axios from "axios"
 
-Vue.prototype.$http = axios
+let instance = axios.create({
+  baseURL: "https://jf-social-api.herokuapp.com/"
+})
+Vue.prototype.$http = instance
 
 firebase.initializeApp({
   apiKey: "AIzaSyBWz6cbSDO0SVk3FZAh-g3U52boGyPNAKo",

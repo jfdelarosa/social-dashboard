@@ -24,7 +24,7 @@ export default{
   },
   mounted(){
     this.loading = true
-    this.$http.get("http://localhost:8888/social-api/twitter/users/" + this.uid)
+    this.$http.get("twitter/users/" + this.uid)
     .then((res) => {
       if(res.data.error || res.data.errors){
         this.error = true
