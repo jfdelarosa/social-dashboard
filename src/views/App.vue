@@ -5,9 +5,14 @@
         el-button(v-on:click="dialogVisible = true") Add Widget
         el-button(v-on:click="reset") Reset Layout
         el-button(v-on:click="update") Update Data Sources
+        el-button(v-on:click="logout") Logout
       el-dialog(title="Add Widget" :visible.sync="dialogVisible")
         el-collapse(v-model="activeNames")
-          el-collapse-item(v-for="(provider, key) in providers" :title="provider.name" :name="key + 1")
+          div(v-for="app in notProviders" style="margin-bottom: 1rem")
+            my-login(:type="app")
+          //- div(v-for="app in apps") {{app}}
+          hr(style="margin-bottom: 0")
+          el-collapse-item(v-for="(provider, key) in providers" :title="provider.name" :name="key + 1" style="margin-bottom: 1rem")
             el-table(:data="componentList[provider.name]")
               el-table-column(type="index" label="#")
               el-table-column(prop="name" label="Nombre" width="120")
@@ -21,6 +26,7 @@
           dynamic(:type="value.component" :network="value.network")
 </template>
 <script>
+import {mapGetters} from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import myLogin from "../components/MyLogin.vue"
@@ -108,9 +114,10 @@ export default {
     }
   },
   computed: {
-    providers(){
-      return this.$store.getters.clients.filter(prov => prov.conected)
-    },
+    ...mapGetters({
+      notProviders: "notProviders",
+      providers: "providers"
+    }),
     layout: {
       get(){
         return this.$store.getters.layout
@@ -136,6 +143,15 @@ export default {
     },
     update(){
       this.$store.dispatch('updateDataSource', {endpoint: "twitter/users", param: this.twitterUid})
+    },
+    logout(){
+      firebase.auth().signOut()
+      .then(() => {
+        this.$router.push({ name: 'login' })
+      })
+      .catch((error)=> {
+        console.log(error)
+      });
     }
   },
   mounted(){

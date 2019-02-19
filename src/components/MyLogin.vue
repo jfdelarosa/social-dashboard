@@ -1,9 +1,8 @@
 <template lang="pug">
-  el-card
-    el-button.w100(:type="type" v-on:click="auth(type)" :loading="loading")
-      font-awesome-icon(:icon="['fab', type]" v-show="!loading")
-      span(v-show="!loading") &nbsp;
-      | Entrar con {{type}}
+  el-button.w100(:type="type" v-on:click="auth(type)" :loading="loading")
+    font-awesome-icon(:icon="['fab', type]" v-show="!loading")
+    span(v-show="!loading") &nbsp;
+    | Entrar con {{type}}
 </template>
 
 <script>
@@ -33,20 +32,26 @@ export default{
           console.log("Aun no :(")
         break;
         case "google":
-          this.signIn(type)
+          this.signIn(type, new firebase.auth.GoogleAuthProvider())
         break;
         case "twitter":
-          this.signIn(type)
+          this.signIn(type, new firebase.auth.TwitterAuthProvider())
         break;
         case "facebook":
-          this.signIn(type)
+          this.signIn(type, new firebase.auth.FacebookAuthProvider())
         break;
       }
     },
-    signIn(provider){
-      setTimeout(() => {
+    signIn(type, provider){
+      firebase.auth().currentUser.linkWithPopup(provider).then((result) => {
+        var token = result.credential.accessToken;
+        var secret = result.credential.secret;
+        var user = result.user;
+        console.log(result)
         this.$store.commit('SET_LOADING', {client: this.type, status: false})
-      }, 1000)
+      }).catch((error) => {
+        console.log(error)
+      });
     }
   }
 }

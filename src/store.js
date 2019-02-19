@@ -41,13 +41,13 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_LOADING(state, payload){
-      state.clients.filter(prov => { return prov.name == payload.client })[0].loading = payload.status
+      Vue.set(state.clients.filter(prov => { return prov.name == payload.client })[0], "loading", payload.status)
     },
     SET_STATUS(state, payload){
-      state.clients.filter(prov => { return prov.name == payload.client })[0].conected = payload.status
+      Vue.set(state.clients.filter(prov => { return prov.name == payload.client })[0], "conected", payload.status)
     },
     SET_DATA(state, payload){
-      state.clients.filter(prov => { return prov.name == payload.client })[0].provider = payload.provider
+      Vue.set(state.clients.filter(prov => { return prov.name == payload.client })[0], "provider", payload.provider)
     },
     SET_LAYOUT(state, payload){
       state.layout = payload
@@ -116,6 +116,12 @@ export default new Vuex.Store({
     },
     clients(state){
       return state.clients
+    },
+    providers(state){
+      return state.clients.filter(prov => prov.conected)
+    },
+    notProviders(state){
+      return state.clients.filter(prov => !prov.conected).map(item => item.name)
     },
     getSource: (state) => (endpoint) => {
       return state.dataSources.filter(prov => {return prov.endpoint == endpoint})
