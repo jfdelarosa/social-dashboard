@@ -4,6 +4,7 @@
       div(style="margin-bottom: 1rem")
         el-button(v-on:click="dialogVisible = true") Add Widget
         el-button(v-on:click="reset") Reset Layout
+        el-button(v-on:click="update") Update Data Sources
       el-dialog(title="Add Widget" :visible.sync="dialogVisible")
         el-collapse(v-model="activeNames")
           el-collapse-item(v-for="(provider, key) in providers" :title="provider.name" :name="key + 1")
@@ -117,7 +118,10 @@ export default {
       set(value){
         this.$store.commit('SET_LAYOUT', value)
       }
-    }
+    },
+    twitterUid(){
+      return this.$store.getters.provider("twitter").uid
+    },
   },
   methods: {
     status(client){
@@ -129,6 +133,9 @@ export default {
     addWidget(component){
       this.$store.commit('ADD_WIDGET', component)
       this.dialogVisible = false
+    },
+    update(){
+      this.$store.dispatch('updateDataSource', {endpoint: "twitter/users", param: this.twitterUid})
     }
   },
   mounted(){

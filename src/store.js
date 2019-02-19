@@ -67,6 +67,23 @@ export default new Vuex.Store({
       .catch((e) => {
         console.log(e);
       });
+    },
+    updateDataSource(state, payload){
+      axios.get(payload.endpoint + "/" + payload.param)
+      .then((res) => {
+        console.log("Api update: " + payload.endpoint)
+        for(let i = 0; i < state.dataSources.length; i++){
+          let el = state.dataSources[i];
+          if(el.endpoint == payload.endpoint){
+            console.log("Updated!")
+            state.dataSources[i].data = res.data
+            break;
+          }
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
     }
   },
   actions: {
@@ -76,6 +93,11 @@ export default new Vuex.Store({
     addDataSource({commit, state, getters}, payload){
       if(getters.getSource(payload.endpoint).length == 0){
         commit("pushDataSource", payload)
+      }
+    },
+    updateDataSource({commit, state, getters}, payload){
+      if(getters.getSource(payload.endpoint).length == 1){
+        commit("updateDataSource", payload)
       }
     }
   },
