@@ -2,7 +2,7 @@
   el-card(v-loading="loading")
     el-alert(v-if="error" title="Error al cargar el widget" type="error" show-icon :closable="false")
     h1.title(v-if="!error") {{value}}
-    h3.subtitle {{label}}
+    h3.subtitle(v-if="!error") {{label}}
 </template>
 
 <script>

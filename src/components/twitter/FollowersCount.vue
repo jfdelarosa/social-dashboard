@@ -4,7 +4,6 @@
 
 <script>
 import Metric from "../Metric.vue"
-import jsonp from "jsonp"
 export default{
   name: "FollowersCount",
   components: {
@@ -12,7 +11,6 @@ export default{
   },
   data(){
     return {
-      count: 0,
       error: false,
       loading: false
     }
@@ -20,22 +18,21 @@ export default{
   computed: {
     uid(){
       return this.$store.getters.provider("twitter").uid
+    },
+    count(){
+      let data = this.$store.getters.dataSource("twitter/users")
+      if(data.error || data.errors){
+        this.error = true
+        return 0
+      }else{
+        return data.followers_count
+      }
     }
   },
   mounted(){
     this.loading = true
-    this.$http.get("twitter/users/" + this.uid)
-    .then((res) => {
-      if(res.data.error || res.data.errors){
-        this.error = true
-      }else{
-        this.count = res.data.followers_count
-      }
-      this.loading = false
-    })
-    .catch((e) => {
-      console.log(e)
-    })
+    this.$store.dispatch('addDataSource', {endpoint: "twitter/users", param: this.uid})
+    this.loading = false
   }
 }
 </script>

@@ -132,7 +132,7 @@ export default {
     }
   },
   mounted(){
-    // this.reset()
+    this.$store.dispatch("clearDataSource")
     firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         for(let provider of user.providerData){
