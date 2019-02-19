@@ -21,7 +21,7 @@ import 'firebase/auth'
 import axios from "axios"
 
 let instance = axios.create({
-  baseURL: "https://jf-social-api.herokuapp.com/"
+  baseURL: (process.env.NODE_ENV=="development" ? "http://localhost:8888/social-api/" : "https://jf-social-api.herokuapp.com/")
 })
 Vue.prototype.$http = instance
 
