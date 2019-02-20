@@ -1,5 +1,5 @@
 <template lang="pug">
-  el-button.w100(:type="type" v-on:click="auth(type)" :loading="loading")
+  el-button.w100(:type="type" v-on:click="auth(type)" :loading="loading" size="small")
     font-awesome-icon(:icon="['fab', type]" v-show="!loading")
     span(v-show="!loading") &nbsp;
     | Entrar con {{type}}
@@ -32,13 +32,15 @@ export default{
           console.log("Aun no :(")
         break;
         case "google":
-          this.signIn(type, new firebase.auth.GoogleAuthProvider())
+          this.signIn(type, new firebase.auth.GoogleAuthProvider());
         break;
         case "twitter":
-          this.signIn(type, new firebase.auth.TwitterAuthProvider())
+          this.signIn(type, new firebase.auth.TwitterAuthProvider());
         break;
         case "facebook":
-          this.signIn(type, new firebase.auth.FacebookAuthProvider())
+          let provider = new firebase.auth.FacebookAuthProvider();
+          provider.addScope('user_birthday');
+          this.signIn(type, provider);
         break;
       }
     },
@@ -49,6 +51,7 @@ export default{
         var user = result.user;
         console.log(result)
         this.$store.commit('SET_LOADING', {client: this.type, status: false})
+        this.$router.go(this.$router.currentRoute)
       }).catch((error) => {
         console.log(error)
       });

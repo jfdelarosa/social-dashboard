@@ -3,8 +3,8 @@
     el-main
       div(style="margin-bottom: 1rem")
         el-button(v-on:click="dialogVisible = true") Add Widget
-        el-button(v-on:click="reset") Reset Layout
-        el-button(v-on:click="update") Update Data Sources
+        el-button(v-on:click="reset" v-if="layout.length > 0") Reset Layout
+        el-button(v-on:click="update" v-if="layout.length > 0") Update Data Sources
         el-button(v-on:click="logout") Logout
       el-dialog(title="Add Widget" :visible.sync="dialogVisible")
         el-collapse(v-model="activeNames")
@@ -90,6 +90,23 @@ export default {
             component: {
               id: btoa(Math.random()).substring(0,12),
               component: "TweetsCount",
+              network: "twitter",
+              hidden: false,
+              pinned: false,
+              position: {
+                x: 0,
+                y: 0,
+                w: 2,
+                h: 1
+              }
+            }
+          },
+          {
+            name: "Favoritos",
+            desc: "Muestra el numero de tweets marcados como favorito",
+            component: {
+              id: btoa(Math.random()).substring(0,12),
+              component: "FavouritesCount",
               network: "twitter",
               hidden: false,
               pinned: false,
