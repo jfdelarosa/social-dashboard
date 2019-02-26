@@ -15,6 +15,7 @@ export default new Vuex.Store({
   state: {
     user: {},
     loading: false,
+    conected: [],
     clients: [
       {
         name: "instagram",
@@ -70,9 +71,10 @@ export default new Vuex.Store({
       state.loading = payload
     },
     pushDataSource(state, payload){
+      console.time("Api call from: " + payload.endpoint)
       axios.get(payload.endpoint + "/" + payload.param)
       .then((res) => {
-        console.log("Api call from: " + payload.endpoint)
+        console.timeEnd("Api call from: " + payload.endpoint)
         state.dataSources.push({
           endpoint: payload.endpoint,
           data: res.data
@@ -83,9 +85,10 @@ export default new Vuex.Store({
       });
     },
     updateDataSource(state, payload){
+      console.time("Api update: " + payload.endpoint)
       axios.get(payload.endpoint + "/" + payload.param)
       .then((res) => {
-        console.log("Api update: " + payload.endpoint)
+        console.timeEnd("Api update: " + payload.endpoint)
         for(let i = 0; i < state.dataSources.length; i++){
           let el = state.dataSources[i];
           if(el.endpoint == payload.endpoint){

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import App from './views/App.vue'
 import Admin from './views/Admin.vue'
@@ -13,7 +14,11 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      // redirect: '/login'
+      component: Home,
+      meta: {
+        layout: 'bulma'
+      }
     },
     {
       path: '/login',
@@ -50,7 +55,8 @@ router.beforeEach((to, from, next) => {
   if(requiresAuth && !currentUser){
     next({name: "login"})
   }else if(!requiresAuth && currentUser){
-    next({name: "app"})
+    // next({name: "app"})
+    next()
   }else{
     next()
   }

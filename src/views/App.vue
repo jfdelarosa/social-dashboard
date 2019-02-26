@@ -20,7 +20,7 @@
     div(v-if="!loading && layout.length > 0")
       grid-layout(:layout.sync="layout" :row-height="90" :responsive="false" :use-css-transforms="false" @layout-updated="layoutUpdated")
         grid-item(v-for="(item, key) in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="key")
-          dynamic(:type="item.component" :network="item.network")
+          dynamic(:type="item.component" :network="item.network" v-loading="item.loading")
 </template>
 <script>
 
