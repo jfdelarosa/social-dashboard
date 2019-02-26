@@ -4,9 +4,6 @@
       font-awesome-icon(:icon="['fab', type]" v-show="!loading")
       span(v-show="!loading") &nbsp;
       | Entrar con {{type}}
-    div hola
-    ul
-      li(v-for="t in test") {{t}}
 </template>
 
 <script>

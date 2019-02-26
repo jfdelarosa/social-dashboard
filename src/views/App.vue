@@ -5,7 +5,6 @@
         el-button(v-on:click="dialogVisible = true") Add Widget
         el-button(v-on:click="reset" v-if="layout.length > 0") Reset Layout
         el-button(v-on:click="update" v-if="layout.length > 0") Update Data Sources
-        el-button(v-on:click="logout") Logout
       el-dialog(title="Add Widget" :visible.sync="dialogVisible")
         el-collapse(v-model="activeNames")
           div(v-for="app in notProviders" style="margin-bottom: 1rem")
@@ -30,7 +29,7 @@ import {mapGetters} from 'vuex'
 import firebase from '../firebase'
 import myLogin from "../components/MyLogin.vue"
 import Dynamic from "../components/Dynamic.vue"
-import VueGridLayout from 'vue-grid-layout';
+import VueGridLayout from 'vue-grid-layout'
 
 const db = firebase.firestore()
 
@@ -48,7 +47,7 @@ export default {
       loading: false,
       user: null,
       activeNames: [],
-      layout: [],
+      // layout: [],
       apps: ["instagram", "google", "twitter", "facebook"],
       componentList: {
         twitter: [
@@ -120,8 +119,14 @@ export default {
     twitterUid(){
       return this.$store.getters.provider("twitter").uid
     },
+    layout(){
+      return this.$store.getters.layout
+    }
   },
   methods: {
+    admin(){
+      this.$router.push({name: "admin"})
+    },
     status(client){
       return this.$store.getters.status(client)
     },
@@ -131,55 +136,15 @@ export default {
     addWidget(component){
       component.i = btoa(Math.random()).substring(0,12)
       this.layout.push(component)
+      this.$store.dispatch('update_layout', this.layout)
       this.dialogVisible = false
     },
     update(){
       this.$store.dispatch('updateDataSource', {endpoint: "twitter/users", param: this.twitterUid})
     },
-    logout(){
-      firebase.auth().signOut()
-      .then(() => {
-        this.$router.push({ name: 'login' })
-      })
-      .catch((error)=> {
-        console.log(error)
-      });
-    },
     layoutUpdated(layout){
-      console.log("updating", this.user.uid)
-      db.collection('layouts').doc(this.user.uid).update({
-        layout: layout,
-        created: Date.now(),
-        updated: Date.now()
-      })
+      this.$store.dispatch('update_layout', layout)
     }
-  },
-  mounted(){
-    this.loading = true
-    firebase.auth().onAuthStateChanged((user) => {
-      if(user) {
-        this.user = user
-        this.$store.commit('SET_USER', user)
-        for(let provider of user.providerData){
-          console.log(provider)
-          let client = provider.providerId.split(".")[0]
-          if(client!="password"){
-            this.$store.commit('SET_STATUS', {client: client, status: true})
-            this.$store.commit('SET_DATA', {client: client, provider: provider})
-          }
-        }
-
-        this.$bind("layout", db.collection("layouts").doc(user.uid))
-        .then(layout => {
-          this.loading = false
-          this.layout = layout.layout
-          this.$unbind("layout")
-        })
-        .catch(error => {
-          console.log("error loading data", error)
-        })
-      }
-    })
   }
 }
 </script>

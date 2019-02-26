@@ -1,4 +1,4 @@
-<template lang="pug">
+new Date()<template lang="pug">
   .cont
     el-card
       el-alert(v-if="error != ''" :title="error" type="error" :closable="false" show-icon)
@@ -47,8 +47,8 @@ export default{
         console.log(res)
         db.collection('layouts').doc(res.user.uid).set({
           layout: [],
-          created: Date.now(),
-          updated: Date.now()
+          created: new Date(),
+          updated: new Date()
         })
         this.$router.push({ name: 'app' })
       }).catch((error) => {

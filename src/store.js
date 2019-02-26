@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import ax from "axios"
+import firebase from './firebase'
 
 let axios = ax.create({
   baseURL: (process.env.NODE_ENV=="development" ? "http://localhost:8888/social-api/" : "https://jf-social-api.herokuapp.com/")
@@ -8,9 +9,12 @@ let axios = ax.create({
 
 Vue.use(Vuex)
 
+const db = firebase.firestore()
+
 export default new Vuex.Store({
   state: {
     user: {},
+    loading: false,
     clients: [
       {
         name: "instagram",
@@ -53,11 +57,17 @@ export default new Vuex.Store({
     SET_LAYOUT(state, payload){
       state.layout = payload
     },
-    ADD_WIDGET(state, payload){
+    PUSH_LAYOUT(state, payload){
       state.layout.push(payload)
     },
+    // ADD_WIDGET(state, payload){
+    //   state.layout.push(payload)
+    // },
     SET_USER(state, payload){
       state.user = payload
+    },
+    SET_LOADING(state, payload){
+      state.loading = payload
     },
     pushDataSource(state, payload){
       axios.get(payload.endpoint + "/" + payload.param)
@@ -103,6 +113,14 @@ export default new Vuex.Store({
       if(getters.getSource(payload.endpoint).length == 1){
         commit("updateDataSource", payload)
       }
+    },
+    update_layout({commit, state, getters}, payload){
+      console.log("update layouts")
+      db.collection('layouts').doc(getters.user.uid).update({
+        layout: payload,
+        updated: new Date()
+      })
+      commit("SET_LAYOUT", payload)
     }
   },
   getters: {
@@ -123,6 +141,9 @@ export default new Vuex.Store({
     },
     user(state){
       return state.user
+    },
+    is_loading(state){
+      return state.loading
     },
     providers(state){
       return state.clients.filter(prov => prov.conected)

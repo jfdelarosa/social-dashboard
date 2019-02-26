@@ -5,6 +5,7 @@ import 'firebase/auth'
 
 import App from './views/App.vue'
 import Login from './views/Login.vue'
+import Admin from './views/Admin.vue'
 
 
 Vue.use(Router)
@@ -25,6 +26,14 @@ const router = new Router({
       path: '/app',
       name: 'app',
       component: App,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
       meta: {
         requiresAuth: true
       }
