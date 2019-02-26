@@ -24,7 +24,6 @@ let instance = axios.create({
 })
 Vue.prototype.$http = instance
 
-
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(ElementUI)
 Vue.use(VueFire)
@@ -33,6 +32,12 @@ library.add(fab)
 locale.use(lang)
 
 Vue.config.productionTip = false
+
+import sidebarLayout from './layouts/Sidebar'
+import simpleLayout from './layouts/Simple'
+
+Vue.component("sidebar-layout", sidebarLayout)
+Vue.component("simple-layout", simpleLayout)
 
 firebase.auth().onAuthStateChanged(() => {
   new Vue({

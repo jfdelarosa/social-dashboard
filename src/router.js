@@ -2,11 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-
-import App from './views/App.vue'
 import Login from './views/Login.vue'
+import App from './views/App.vue'
 import Admin from './views/Admin.vue'
-
 
 Vue.use(Router)
 
@@ -20,14 +18,18 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: Login,
+      meta: {
+        layout: 'simple'
+      }
     },
     {
       path: '/app',
       name: 'app',
       component: App,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        layout: 'sidebar'
       }
     },
     {
@@ -35,7 +37,8 @@ const router = new Router({
       name: 'admin',
       component: Admin,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        layout: 'sidebar'
       }
     }
   ]
@@ -45,9 +48,9 @@ router.beforeEach((to, from, next) => {
   const currentUser = firebase.auth().currentUser
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   if(requiresAuth && !currentUser){
-    next("login")
+    next({name: "login"})
   }else if(!requiresAuth && currentUser){
-    next("app")
+    next({name: "app"})
   }else{
     next()
   }

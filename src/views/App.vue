@@ -1,27 +1,26 @@
 <template lang="pug">
-  el-container
-    el-main
-      div(style="margin-bottom: 1rem")
-        el-button(v-on:click="dialogVisible = true") Add Widget
-        el-button(v-on:click="reset" v-if="layout.length > 0") Reset Layout
-        el-button(v-on:click="update" v-if="layout.length > 0") Update Data Sources
-      el-dialog(title="Add Widget" :visible.sync="dialogVisible")
-        el-collapse(v-model="activeNames")
-          div(v-for="app in notProviders" style="margin-bottom: 1rem")
-            my-login(:type="app")
-          hr(style="margin-bottom: 0")
-          el-collapse-item(v-for="(provider, key) in providers" :title="provider.name" :name="key + 1" style="margin-bottom: 1rem")
-            el-table(:data="componentList[provider.name]")
-              el-table-column(type="index" label="#")
-              el-table-column(prop="name" label="Nombre" width="120")
-              el-table-column(prop="desc" label="Descripción")
-              el-table-column(label="Opciones" width="120")
-                template(slot-scope="scope")
-                  el-button(v-on:click="addWidget(scope.row.component)" size="mini") Agregar
-      div(v-if="!loading && layout.length > 0")
-        grid-layout(:layout.sync="layout" :row-height="90" :responsive="false" :use-css-transforms="false" @layout-updated="layoutUpdated")
-          grid-item(v-for="(item, key) in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="key")
-            dynamic(:type="item.component" :network="item.network")
+  div
+    div(style="margin-bottom: 1rem")
+      el-button(v-on:click="dialogVisible = true") Add Widget
+      el-button(v-on:click="reset" v-if="layout.length > 0") Reset Layout
+      el-button(v-on:click="update" v-if="layout.length > 0") Update Data Sources
+    el-dialog(title="Add Widget" :visible.sync="dialogVisible")
+      el-collapse(v-model="activeNames")
+        div(v-for="app in notProviders" style="margin-bottom: 1rem")
+          my-login(:type="app")
+        hr(style="margin-bottom: 0")
+        el-collapse-item(v-for="(provider, key) in providers" :title="provider.name" :name="key + 1" style="margin-bottom: 1rem")
+          el-table(:data="componentList[provider.name]")
+            el-table-column(type="index" label="#")
+            el-table-column(prop="name" label="Nombre" width="120")
+            el-table-column(prop="desc" label="Descripción")
+            el-table-column(label="Opciones" width="120")
+              template(slot-scope="scope")
+                el-button(v-on:click="addWidget(scope.row.component)" size="mini") Agregar
+    div(v-if="!loading && layout.length > 0")
+      grid-layout(:layout.sync="layout" :row-height="90" :responsive="false" :use-css-transforms="false" @layout-updated="layoutUpdated")
+        grid-item(v-for="(item, key) in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="key")
+          dynamic(:type="item.component" :network="item.network")
 </template>
 <script>
 

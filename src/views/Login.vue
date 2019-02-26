@@ -1,4 +1,4 @@
-new Date()<template lang="pug">
+<template lang="pug">
   .cont
     el-card
       el-alert(v-if="error != ''" :title="error" type="error" :closable="false" show-icon)
