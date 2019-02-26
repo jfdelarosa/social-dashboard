@@ -1,13 +1,18 @@
 <template lang="pug">
-  el-button.w100(:type="type" v-on:click="auth(type)" :loading="loading" size="small")
-    font-awesome-icon(:icon="['fab', type]" v-show="!loading")
-    span(v-show="!loading") &nbsp;
-    | Entrar con {{type}}
+  div
+    el-button.w100(:type="type" v-on:click="auth(type)" :loading="loading" size="small")
+      font-awesome-icon(:icon="['fab', type]" v-show="!loading")
+      span(v-show="!loading") &nbsp;
+      | Entrar con {{type}}
+    div hola
+    ul
+      li(v-for="t in test") {{t}}
 </template>
 
 <script>
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import firebase from '../firebase'
+
+const db = firebase.firestore()
 
 export default{
   props: ["type"],
@@ -15,6 +20,7 @@ export default{
   data(){
     return {
       response: "",
+      test: [],
       config: {
       }
     }
@@ -46,15 +52,23 @@ export default{
     },
     signIn(type, provider){
       firebase.auth().currentUser.linkWithPopup(provider).then((result) => {
-        var token = result.credential.accessToken;
-        var secret = result.credential.secret;
-        var user = result.user;
-        console.log(result)
+        let credentials = {
+          token: result.credential.accessToken,
+          secret: result.credential.secret,
+          user: result.user
+        }
+        console.log(credentials)
+        this.$store.dispatch('appendCredentials', {client: "twitter", credentials: credentials})
         this.$store.commit('SET_LOADING', {client: this.type, status: false})
-        this.$router.go(this.$router.currentRoute)
+        // this.$router.go(this.$router.currentRoute)
       }).catch((error) => {
         console.log(error)
       });
+    }
+  },
+  firestore(){
+    return {
+      test: db.collection("test")
     }
   }
 }

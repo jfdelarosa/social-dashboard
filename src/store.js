@@ -10,6 +10,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    user: {},
     clients: [
       {
         name: "instagram",
@@ -54,6 +55,9 @@ export default new Vuex.Store({
     },
     ADD_WIDGET(state, payload){
       state.layout.push(payload)
+    },
+    SET_USER(state, payload){
+      state.user = payload
     },
     pushDataSource(state, payload){
       axios.get(payload.endpoint + "/" + payload.param)
@@ -116,6 +120,9 @@ export default new Vuex.Store({
     },
     clients(state){
       return state.clients
+    },
+    user(state){
+      return state.user
     },
     providers(state){
       return state.clients.filter(prov => prov.conected)

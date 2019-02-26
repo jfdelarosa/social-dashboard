@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import firebase from '../firebase'
+const db = firebase.firestore()
 export default{
   name: "login",
   data(){
@@ -44,6 +44,12 @@ export default{
     },
     doRegister(){
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then((res) => {
+        console.log(res)
+        db.collection('layouts').doc(res.user.uid).set({
+          layout: [],
+          created: Date.now(),
+          updated: Date.now()
+        })
         this.$router.push({ name: 'app' })
       }).catch((error) => {
         this.error = error.message;

@@ -15,9 +15,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import firebase from 'firebase/app'
-import 'firebase/auth'
-
+import firebase from './firebase'
+import VueFire from 'vuefire'
 import axios from "axios"
 
 let instance = axios.create({
@@ -25,20 +24,13 @@ let instance = axios.create({
 })
 Vue.prototype.$http = instance
 
-firebase.initializeApp({
-  apiKey: "AIzaSyBWz6cbSDO0SVk3FZAh-g3U52boGyPNAKo",
-  authDomain: "qp-social-dashboard.firebaseapp.com",
-  databaseURL: "https://qp-social-dashboard.firebaseio.com",
-  projectId: "qp-social-dashboard",
-  storageBucket: "qp-social-dashboard.appspot.com",
-  messagingSenderId: "852878284719"
-});
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
-Vue.use(ElementUI);
+Vue.use(ElementUI)
+Vue.use(VueFire)
 
 library.add(fab)
-locale.use(lang);
+locale.use(lang)
 
 Vue.config.productionTip = false
 
