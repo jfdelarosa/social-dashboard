@@ -68,7 +68,7 @@ export default{
 
 <style>
 .cont{
-  max-width: 400px;
+  width: 400px;
   margin: 5rem auto;
 }
 </style>

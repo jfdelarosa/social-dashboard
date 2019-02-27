@@ -48,6 +48,23 @@ export default {
 }
 </script>
 <style>
+#app{
+  height: 100%;  
+}
+.el-container.app{
+  height: 100%;
+  background: #d8e4ec;
+}
+.el-menu.sidebar-menu{  
+  height: 100%;
+  border: none;
+}
+.el-menu.top-menu{
+  float: right;
+}
+.el-submenu .el-menu-item{
+  min-width: 100%!important;
+}
 body{
   padding: 0;
   margin: 0;

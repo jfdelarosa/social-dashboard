@@ -15,6 +15,7 @@ const router = new Router({
     {
       path: '/',
       // redirect: '/login'
+      name: 'home',
       component: Home,
       meta: {
         layout: 'bulma'

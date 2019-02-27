@@ -1,7 +1,7 @@
 <template lang="pug">
-el-container
+el-container.app
   el-aside(width="200px")
-    el-menu(:router="true" background-color='#2f3542' text-color='#fff' active-text-color='#ffd04b')
+    el-menu.sidebar-menu(:router="true" background-color='#2f3542' text-color='#fff' active-text-color='#ffd04b')
       el-menu-item(index="app" :route="{name: 'app'}")
         i.el-icon-menu
         | Home
@@ -22,6 +22,7 @@ el-container
         span.love ♥
 </template>
 <script>
+import firebase from '../firebase'
 export default {
   computed: {
     user(){
@@ -35,7 +36,8 @@ export default {
     logout(){
       firebase.auth().signOut()
       .then(() => {
-        this.$router.push({ name: 'login' })
+        this.$store.commit('SET_USER', null)
+        this.$router.push({ name: 'home' })
       })
       .catch((error)=> {
         console.log(error)
@@ -44,18 +46,15 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style module>
 .el-menu{
   height: 100%;
+  border: none;
 }
-.el-submenu .el-menu-item{
-  min-width: 100%;
-}
-html, body, #app, .el-container{
+html, body{
   height: 100%;
 }
 body{
-  background: #d8e4ec;
   padding: 0;
   margin: 0;
 }

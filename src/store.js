@@ -13,7 +13,7 @@ const db = firebase.firestore()
 
 export default new Vuex.Store({
   state: {
-    user: {},
+    user: null,
     loading: false,
     conected: [],
     clients: [

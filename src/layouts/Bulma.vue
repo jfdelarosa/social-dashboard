@@ -1,13 +1,17 @@
 <template lang="pug">
 el-container
   el-header
-    .container
-      el-menu(mode="horizontal" :router="true" background-color='transparent' text-color='#fff' active-text-color='#ffd04b')
-        el-menu-item(index="app" :route="{name: 'app'}") Inicio
+    .container.has-top-menu
+      el-menu.top-menu(mode="horizontal" :router="true" background-color='transparent' text-color='#fff' active-text-color='#ffd04b')
+        el-menu-item(index="app" :route="{name: 'home'}") Inicio
         el-menu-item(index="app" :route="{name: 'app'}") Precios
-        el-menu-item(index="app" :route="{name: 'app'}") Iniciar sesión
-        el-menu-item(index="app" :route="{name: 'app'}") Registro
+        el-menu-item(v-if="!user" index="login" :route="{name: 'login'}") Iniciar sesión
+        el-menu-item.has-button(v-if="!user" index="register" :route="{name: 'login'}")
+          el-button(type="primary" round) Registro
         el-menu-item(v-if="user && user.email == 'fernando.delarosa@questionpro.com'" index="admin" :route="{name: 'admin'}") Admin
+        el-menu-item(v-if="user" index="#" v-on:click="logout") Salir
+        el-menu-item.has-button(v-if="user" index="app" :route="{name: 'app'}")
+          el-button(type="primary" round) Ir a la App
         //- el-submenu(index='2')
           template(slot='title')
             i.el-icon-setting
@@ -20,24 +24,14 @@ el-container
         path(fill='#FFFFFF' opacity='0.7' d='M0 30 V15 Q30 3 60 15 V30z')
         path(fill='#FFFFFF' d='M0 30 V12 Q30 17 55 12 T100 11 V30z')
   el-main
-    .container(style="width: 800px")
-      el-row(:gutter="20")
-        el-col(:span="8")
-          img(style="width:80%" src="undraw_savings_hjfl.svg")
-        el-col(:span="8")
-          img(style="width:80%" src="undraw_visual_data_b1wx.svg")
-        el-col(:span="8")
-          img(style="width:80%" src="undraw_dashboard_nklg.svg")
-      el-row(:gutter="20")
-        el-col(:span="8")
-          img(style="width:80%" src="undraw_social_dashboard_k3pt.svg")
-        el-col(:span="8")
-          img(style="width:80%" src="undraw_data_xmfy.svg")
-        el-col(:span="8")
-          img(style="width:80%" src="undraw_teacher_35j2.svg")
     slot
+    footer
+      p Diseñado por 
+        a(href="#") Internet Mariachi
+        | .
 </template>
 <script>
+import firebase from '../firebase'
 export default {
   computed: {
     user(){
@@ -51,7 +45,8 @@ export default {
     logout(){
       firebase.auth().signOut()
       .then(() => {
-        this.$router.push({ name: 'login' })
+        this.$store.commit('SET_USER', null)
+        this.$router.push({ name: 'home' })
       })
       .catch((error)=> {
         console.log(error)
@@ -64,8 +59,17 @@ export default {
 body{
   background: white;
 }
+.container{
+  margin: 0 auto;
+  max-width: 1000px;
+}
+.container.has-top-menu{
+  width: 1000px;
+}
+.el-main{
+  padding: 0;
+}
 header.el-header{
-  /*height: auto!important;*/
   background-image: linear-gradient(to bottom right, #00c4ff 0%, #209cee 100%);
   height: 70vh!important;
   padding: 0;
@@ -83,19 +87,37 @@ svg{
 .el-menu li:hover{
   background: rgba(255, 255, 255, 0.1)!important;
 }
-.title, .subtitle{
+header .title, header .subtitle{
   text-align: center;
   color: white;
   margin: 0;
 }
-.title{
+header .title{
   font-size: 2.5rem;
 }
-.subtitle{
+header .subtitle{
   font-size: 1.75rem;
 }
-.container{
-  margin: 0 auto;
-  width: 1000px;
+.has-button .el-button{
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  color: #209cee;
+}
+.el-menu li.has-button:hover{
+  background-color: transparent!important;
+}
+.has-button .el-button:hover{
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+footer{
+  background: #333c44;
+  padding: 2rem 0;
+  text-align: center;
+  color: white;
+}
+footer a{
+  color: #d9d9d9;
+  border-bottom: 1px dotted white;
 }
 </style>

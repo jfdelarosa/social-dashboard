@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+div.bg
   el-container
     slot
   el-footer
@@ -11,3 +11,17 @@ div
 export default {
 }
 </script>
+<style scoped>
+.bg{
+  background: #F0F0F0;
+}
+.el-footer{
+  opacity: 0.6;
+  text-align: center;
+}
+.love{
+  color: red;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+</style>
