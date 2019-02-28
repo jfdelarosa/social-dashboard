@@ -1,7 +1,7 @@
 <template lang="pug">
   div
     el-table(:data="components")
-      el-table-column(type="index" label="#")
+      el-table-column(type="index" label="#" align="center")
       el-table-column(prop="name" label="Name")
       el-table-column(prop="desc" label="Description")
       el-table-column(prop="component" label="Component Name")

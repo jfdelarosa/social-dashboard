@@ -14,6 +14,7 @@ export default {
 <style scoped>
 .bg{
   background: #F0F0F0;
+  height: 100%;
 }
 .el-footer{
   opacity: 0.6;

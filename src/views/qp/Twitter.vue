@@ -3,15 +3,16 @@
     div(style="margin-bottom: 1rem")
       el-date-picker(v-model="range" type="daterange" align="right" start-placeholder="Start Date" end-placeholder="End Date")
       div(style="float: right")
-        el-button(v-on:click="do_search" v-if="range.length == 2" type="success") Search
-        el-button(v-on:click="showDialog = true") Manage users
+        el-button(v-on:click="do_search" v-if="range.length == 2" icon="el-icon-search" type="success") Search
+        el-button(v-on:click="showDialog = true" icon="el-icon-setting") Manage users
     el-dialog(title="Manage users" :visible.sync="showDialog")
-      el-row(:gutter="20")
-        el-col(:span="16")
-          el-input(v-model="username" placeholder="Username")
-            template(slot="prepend") @
-        el-col(:span="8")
-          el-button(v-on:click="add" style="width: 100%" type="success") Add user
+      el-form(v-on:submit.native.prevent="add")
+        el-row(:gutter="20")
+          el-col(:span="16")
+            el-input(v-model="username" placeholder="Username")
+              template(slot="prepend") @
+          el-col(:span="8")
+            el-button(v-on:click="add" style="width: 100%" type="success") Add user
       el-table(:data="allUsers")
         el-table-column(type="index" label="#")
         el-table-column(prop="username" label="Username")
@@ -24,8 +25,8 @@
       el-table-column(label="Username")
         template(slot-scope="scope")
           a(:href="'http://twitter.com/' + scope.row.username" target="_BLANK") {{scope.row.username}}
-      el-table-column(prop="free" label="Free" align="center")
-      el-table-column(prop="qpro" label="QuestionPro" align="center")
+      el-table-column(prop="free" label="Free tweets" align="center")
+      el-table-column(prop="qpro" label="QuestionPro tweets" align="center")
       
 
 </template>

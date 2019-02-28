@@ -6,7 +6,7 @@ el-container
         el-menu-item(index="app" :route="{name: 'home'}") Inicio
         el-menu-item(index="app" :route="{name: 'app'}") Precios
         el-menu-item(v-if="!user" index="login" :route="{name: 'login'}") Iniciar sesión
-        el-menu-item.has-button(v-if="!user" index="register" :route="{name: 'login'}")
+        el-menu-item.has-button(v-if="!user" index="register" :route="{name: 'register'}")
           el-button(type="primary" round) Registro
         el-menu-item(v-if="user && user.email == 'fernando.delarosa@questionpro.com'" index="admin" :route="{name: 'admin'}") Admin
         el-menu-item(v-if="user" index="#" v-on:click="logout") Salir

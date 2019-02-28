@@ -4,6 +4,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
+import Register from './views/Register.vue'
 import App from './views/App.vue'
 import Admin from './views/Admin.vue'
 import twitterQp from './views/qp/Twitter.vue'
@@ -26,6 +27,14 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login,
+      meta: {
+        layout: 'simple'
+      }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register,
       meta: {
         layout: 'simple'
       }

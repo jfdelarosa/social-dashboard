@@ -55,9 +55,9 @@ export default{
           user: result.user
         }
         console.log(credentials)
-        this.$store.dispatch('appendCredentials', {client: "twitter", credentials: credentials})
+        // this.$store.dispatch('appendCredentials', {client: "twitter", credentials: credentials})
         this.$store.commit('SET_LOADING', {client: this.type, status: false})
-        // this.$router.go(this.$router.currentRoute)
+        this.$router.go(this.$router.currentRoute)
       }).catch((error) => {
         console.log(error)
       });
