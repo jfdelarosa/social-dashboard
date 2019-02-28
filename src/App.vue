@@ -48,8 +48,12 @@ export default {
 }
 </script>
 <style>
-#app{
-  height: 100%;  
+html, body, #app{
+  height: 100%;
+}
+body{
+  padding: 0;
+  margin: 0;
 }
 .el-container.app{
   height: 100%;
@@ -65,8 +69,15 @@ export default {
 .el-submenu .el-menu-item{
   min-width: 100%!important;
 }
-body{
-  padding: 0;
-  margin: 0;
+.fa-menu{
+  margin-right: 10px;
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+  vertical-align: middle;
+  color: #909399;
+}
+.is-active .fa-menu{
+  color: rgb(255, 208, 75);
 }
 </style>

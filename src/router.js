@@ -6,6 +6,7 @@ import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import App from './views/App.vue'
 import Admin from './views/Admin.vue'
+import twitterQp from './views/qp/Twitter.vue'
 
 Vue.use(Router)
 
@@ -42,6 +43,15 @@ const router = new Router({
       path: '/admin',
       name: 'admin',
       component: Admin,
+      meta: {
+        requiresAuth: true,
+        layout: 'sidebar'
+      }
+    },
+    {
+      path: '/twitter-qp',
+      name: 'twitterQp',
+      component: twitterQp,
       meta: {
         requiresAuth: true,
         layout: 'sidebar'

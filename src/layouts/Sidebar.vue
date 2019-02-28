@@ -8,6 +8,9 @@ el-container.app
       el-menu-item(v-if="user && user.email == 'fernando.delarosa@questionpro.com'" index="admin" :route="{name: 'admin'}")
         i.el-icon-star-on
         | Admin
+      el-menu-item(v-if="user && user.email.includes('@questionpro.com')" index="twitterQp" :route="{name: 'twitterQp'}")
+        font-awesome-icon.fa-menu(:icon="['fab', 'twitter']")
+        | Tweets
       el-submenu(index='2')
         template(slot='title')
           i.el-icon-setting
@@ -46,17 +49,10 @@ export default {
   }
 }
 </script>
-<style module>
+<style scoped>
 .el-menu{
   height: 100%;
   border: none;
-}
-html, body{
-  height: 100%;
-}
-body{
-  padding: 0;
-  margin: 0;
 }
 .w100{
   width: 100%;
@@ -80,10 +76,6 @@ body{
 .w0{
   width: 0!important;
 }
-.el-footer{
-  opacity: 0.6;
-  text-align: center;
-}
 .el-dialog__body{
   padding: 0 20px!important;
 }
@@ -92,6 +84,10 @@ body{
 }
 .el-form-item__label{
   height: 2rem;
+}
+.el-footer{
+  opacity: 0.6;
+  text-align: center;
 }
 .love{
   color: red;
