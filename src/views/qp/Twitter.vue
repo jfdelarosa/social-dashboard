@@ -27,8 +27,6 @@
           a(:href="'http://twitter.com/' + scope.row.username" target="_BLANK") {{scope.row.username}}
       el-table-column(prop="free" label="Free tweets" align="center")
       el-table-column(prop="qpro" label="QuestionPro tweets" align="center")
-      
-
 </template>
 <script>
 import firebase from '../../firebase'
@@ -113,11 +111,8 @@ export default{
     count_tweets(data, user){
       let filterByDate = data.filter(tweet => {
         let date = new Date(tweet.created_at)
-        console.log(date >= this.range[0], date <= this.range[1])
         return date >= this.range[0] && date <= this.range[1]
       })
-
-      // console.log("filterByDate", filterByDate)
 
       let filteredTweets = filterByDate.map(tweet => {
         if(!tweet.entities){
@@ -129,14 +124,10 @@ export default{
           return filteredHashtags
         }
       })
-
-      // console.log("filteredTweets", filteredTweets)
       
       let QP = filteredTweets.filter(tweet => {
         return tweet.length > 0
       })
-
-      // console.log("QP", QP)
 
       this.count.push({
         username: user,

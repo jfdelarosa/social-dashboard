@@ -113,7 +113,8 @@ export default new Vuex.Store({
       }
     },
     updateDataSource({commit, state, getters}, payload){
-      if(getters.getSource(payload.endpoint).length == 1){
+      console.log("asadadsasdsaads")
+      if(getters.getSource(payload.endpoint).length > 0){
         commit("updateDataSource", payload)
       }
     },
@@ -155,6 +156,7 @@ export default new Vuex.Store({
       return state.clients.filter(prov => !prov.conected).map(item => item.name)
     },
     getSource: (state) => (endpoint) => {
+      console.log(state.dataSources, endpoint)
       return state.dataSources.filter(prov => {return prov.endpoint == endpoint})
     },
     dataSource: (state, getters) => (endpoint) => {
