@@ -70,6 +70,13 @@ export default new Vuex.Store({
     SET_LOADING(state, payload){
       state.loading = payload
     },
+    setDataSourceLoading(state, payload){
+      state.dataSources.map(item => {
+        if(item.endpoint == payload){
+          item.endpoint = !item.endpoint
+        }
+      })
+    },
     pushDataSource(state, payload){
       console.time("Api call from: " + payload.endpoint)
       axios.get(payload.endpoint + "/" + payload.param)
@@ -77,6 +84,7 @@ export default new Vuex.Store({
         console.timeEnd("Api call from: " + payload.endpoint)
         state.dataSources.push({
           endpoint: payload.endpoint,
+          loading: true,
           data: res.data
         });
       })
