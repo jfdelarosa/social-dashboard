@@ -1,14 +1,16 @@
 <template lang="pug">
   div
     div(style="margin-bottom: 1rem")
-      el-button(v-on:click="dialogVisible = true") Add Widget
+      el-button(v-on:click="loginVisible = true") Social Login
+      el-button(v-on:click="dialogVisible = true" v-if="providers.length > 0") Add Widget
       el-button(v-on:click="reset" v-if="layout.length > 0") Reset Layout
-      el-button(v-on:click="update" v-if="layout.length > 0") Update Data Sources
+      el-button(v-on:click="update" v-if="layout.length > 0 && false") Update Data Sources
+    el-dialog(title="Social Login" :visible.sync="loginVisible")
+      div(v-for="app in notProviders" style="margin-bottom: 1rem")
+        my-login(:type="app")
+      
     el-dialog(title="Add Widget" :visible.sync="dialogVisible")
       el-collapse(v-model="activeNames")
-        div(v-for="app in notProviders" style="margin-bottom: 1rem")
-          my-login(:type="app")
-        hr(style="margin-bottom: 0")
         el-collapse-item(v-for="(provider, key) in providers" :title="provider.name" :name="key + 1" style="margin-bottom: 1rem")
           el-table(:data="componentList[provider.name]")
             el-table-column(type="index" label="#")
@@ -43,6 +45,7 @@ export default {
   data(){
     return {
       dialogVisible: false,
+      loginVisible: false,
       loading: false,
       user: null,
       activeNames: [],
@@ -154,5 +157,8 @@ export default {
 }
 .vue-resizable-handle{
   bottom: -2px!important;
+}
+.el-collapse{
+  border-bottom: none;
 }
 </style>
