@@ -3,7 +3,7 @@
     el-button.w100(:type="type" v-on:click="auth(type)" :loading="loading" size="small")
       font-awesome-icon(:icon="['fab', type]" v-show="!loading")
       span(v-show="!loading") &nbsp;
-      | Entrar con {{type}}
+      | Salir de {{type}}
 </template>
 
 <script>
@@ -11,7 +11,7 @@ import firebase from '../firebase'
 
 export default{
   props: ["type"],
-  name: "myLogin",
+  name: "myLogout",
   data(){
     return {
       response: "",

@@ -6,9 +6,16 @@
       el-button(v-on:click="reset" v-if="layout.length > 0") Reset Layout
       el-button(v-on:click="update" v-if="layout.length > 0 && false") Update Data Sources
     el-dialog(title="Social Login" :visible.sync="loginVisible")
-      div(v-for="app in notProviders" style="margin-bottom: 1rem")
-        my-login(:type="app")
-      
+      el-row(:gutter="20")
+        el-col(:span="12")
+          strong(style="display: block; margin-bottom: 1rem;") Login
+          div(v-for="app in notProviders" style="margin-bottom: 1rem")
+            my-login(:type="app")
+        el-col(:span="12")
+          strong(style="display: block; margin-bottom: 1rem;") Logout
+          div(v-for="app in providers" style="margin-bottom: 1rem")
+            my-logout(:type="app.name")
+
     el-dialog(title="Add Widget" :visible.sync="dialogVisible")
       el-collapse(v-model="activeNames")
         el-collapse-item(v-for="(provider, key) in providers" :title="provider.name" :name="key + 1" style="margin-bottom: 1rem")
@@ -29,6 +36,7 @@
 import {mapGetters} from 'vuex'
 import firebase from '../firebase'
 import myLogin from "../components/MyLogin.vue"
+import myLogout from "../components/MyLogout.vue"
 import Dynamic from "../components/Dynamic.vue"
 import VueGridLayout from 'vue-grid-layout'
 
@@ -37,6 +45,7 @@ const db = firebase.firestore()
 export default {
   components: {
     myLogin,
+    myLogout,
     Dynamic,
     GridLayout: VueGridLayout.GridLayout,
     GridItem: VueGridLayout.GridItem
