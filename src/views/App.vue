@@ -19,16 +19,18 @@
     el-dialog(title="Add Widget" :visible.sync="dialogVisible")
       el-collapse(v-model="activeNames")
         el-collapse-item(v-for="(provider, key) in providers" :title="provider.name" :name="key + 1" style="margin-bottom: 1rem")
-          el-table(:data="componentList[provider.name]")
+          //- pre(v-for="item in getComponents(provider.name)") {{item}}
+          el-table(:data="getComponents(provider.name)")
             el-table-column(type="index" label="#")
             el-table-column(prop="name" label="Nombre" width="120")
             el-table-column(prop="desc" label="Descripción")
             el-table-column(label="Opciones" width="120")
               template(slot-scope="scope")
-                el-button(v-on:click="addWidget(scope.row.component)" size="mini") Agregar
-    div(v-if="!loading && layout.length > 0")
-      grid-layout(:layout.sync="layout" :row-height="90" :responsive="false" :use-css-transforms="false" @layout-updated="layoutUpdated")
-        grid-item(v-for="(item, key) in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :key="key")
+                el-button(v-on:click="addWidget(scope.row)" size="mini") Agregar
+    div(v-if="!loading && layout.length")
+      pre(v-for="item in layout") {{item}}
+      grid-layout(v-if="dataReady" :layout.sync="layout" :row-height="90" :responsive="false" :use-css-transforms="false" @layout-updated="layoutUpdated")
+        grid-item(v-for="(item, key) in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.id" :key="key")
           dynamic(:type="item.component" :network="item.network" v-loading="item.loading")
 </template>
 <script>
@@ -57,69 +59,71 @@ export default {
       loginVisible: false,
       loading: false,
       user: null,
+      dataReady: false,
       activeNames: [],
+      componentList: [],
       // layout: [],
       apps: ["instagram", "google", "twitter", "facebook"],
-      componentList: {
-        twitter: [
-          {
-            name: "Followers",
-            desc: "Muestra el numero de followers",
-            component: {
-              component: "FollowersCount",
-              network: "twitter",
-              hidden: false,
-              pinned: false,
-              x: 0,
-              y: 0,
-              w: 2,
-              h: 1
-            }
-          },
-          {
-            name: "Following",
-            desc: "Muestra el numero de following",
-            component: {
-              component: "FollowingCount",
-              network: "twitter",
-              hidden: false,
-              pinned: false,
-              x: 0,
-              y: 0,
-              w: 2,
-              h: 1
-            }
-          },
-          {
-            name: "Tweets",
-            desc: "Muestra el numero de tweets",
-            component: {
-              component: "TweetsCount",
-              network: "twitter",
-              hidden: false,
-              pinned: false,
-              x: 0,
-              y: 0,
-              w: 2,
-              h: 1
-            }
-          },
-          {
-            name: "Favoritos",
-            desc: "Muestra el numero de tweets marcados como favorito",
-            component: {
-              component: "FavouritesCount",
-              network: "twitter",
-              hidden: false,
-              pinned: false,
-              x: 0,
-              y: 0,
-              w: 2,
-              h: 1
-            }
-          }
-        ]
-      }
+      // componentList: {
+      //   twitter: [
+      //     {
+      //       name: "Followers",
+      //       desc: "Muestra el numero de followers",
+      //       component: {
+      //         component: "FollowersCount",
+      //         network: "twitter",
+      //         hidden: false,
+      //         pinned: false,
+      //         x: 0,
+      //         y: 0,
+      //         w: 2,
+      //         h: 1
+      //       }
+      //     },
+      //     {
+      //       name: "Following",
+      //       desc: "Muestra el numero de following",
+      //       component: {
+      //         component: "FollowingCount",
+      //         network: "twitter",
+      //         hidden: false,
+      //         pinned: false,
+      //         x: 0,
+      //         y: 0,
+      //         w: 2,
+      //         h: 1
+      //       }
+      //     },
+      //     {
+      //       name: "Tweets",
+      //       desc: "Muestra el numero de tweets",
+      //       component: {
+      //         component: "TweetsCount",
+      //         network: "twitter",
+      //         hidden: false,
+      //         pinned: false,
+      //         x: 0,
+      //         y: 0,
+      //         w: 2,
+      //         h: 1
+      //       }
+      //     },
+      //     {
+      //       name: "Favoritos",
+      //       desc: "Muestra el numero de tweets marcados como favorito",
+      //       component: {
+      //         component: "FavouritesCount",
+      //         network: "twitter",
+      //         hidden: false,
+      //         pinned: false,
+      //         x: 0,
+      //         y: 0,
+      //         w: 2,
+      //         h: 1
+      //       }
+      //     }
+      //   ]
+      // }
     }
   },
   computed: {
@@ -130,8 +134,17 @@ export default {
     twitterUid(){
       return this.$store.getters.provider("twitter").uid
     },
-    layout(){
-      return this.$store.getters.layout
+    layout: {
+      get(){
+        return this.$store.getters.layout
+      },
+      set(val){
+        let ret = this.copyObject(val)
+        console.log("setter", ret)
+        this.layout.push(ret)
+
+        this.$store.dispatch('update_layout', this.layout)
+      }
     }
   },
   methods: {
@@ -142,12 +155,15 @@ export default {
       return this.$store.getters.status(client)
     },
     reset(){
-      this.$store.commit('SET_LAYOUT', [])
+      // this.$store.commit('SET_LAYOUT', [])
+      this.$store.dispatch('update_layout', [])
+    },
+    copyObject(obj){
+      return JSON.parse(JSON.stringify(obj))
     },
     addWidget(component){
-      component.i = btoa(Math.random()).substring(0,12)
-      this.layout.push(component)
-      this.$store.dispatch('update_layout', this.layout)
+      this.layout = this.copyObject(component)
+      // this.$store.dispatch('update_layout', this.layout)
       this.dialogVisible = false
     },
     update(){
@@ -155,7 +171,24 @@ export default {
     },
     layoutUpdated(layout){
       this.$store.dispatch('update_layout', layout)
+    },
+    getComponents(network){
+      let ret = this.componentList.filter(item => {
+        return item.network == network
+      })
+      return ret
     }
+  },
+  // firestore(){
+  //   return {
+  //     componentList: db.collection("components")
+  //   }
+  // },
+  mounted(){
+    this.$bind("componentList", db.collection("components")).then((doc) => {
+      this.dataReady = true
+      // console.log("doc", doc)
+    })
   }
 }
 </script>

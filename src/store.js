@@ -127,7 +127,7 @@ export default new Vuex.Store({
       }
     },
     update_layout({commit, state, getters}, payload){
-      console.log("update layouts")
+      console.log("update layouts", payload)
       db.collection('layouts').doc(getters.user.uid).update({
         layout: payload,
         updated: new Date()
