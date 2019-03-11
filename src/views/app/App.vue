@@ -4,6 +4,7 @@
       el-button(v-on:click="loginVisible = true") Social Login
       el-button(v-on:click="dialogVisible = true" v-if="providers.length > 0") Add Widget
       el-button(v-on:click="reset" v-if="layout.length > 0") Reset Layout
+      el-button(v-on:click="reset") Hard Reset
       el-button(v-on:click="update" v-if="layout.length > 0 && false") Update Data Sources
     el-dialog(title="Social Login" :visible.sync="loginVisible")
       el-row(:gutter="20")
@@ -28,19 +29,22 @@
               template(slot-scope="scope")
                 el-button(v-on:click="addWidget(scope.row)" size="mini") Agregar
     div(v-if="!loading && layout.length")
-      pre(v-for="item in layout") {{item}}
-      grid-layout(v-if="dataReady" :layout.sync="layout" :row-height="90" :responsive="false" :use-css-transforms="false" @layout-updated="layoutUpdated")
-        grid-item(v-for="(item, key) in layout" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.id" :key="key")
+      pre {{layoutFromStore}}
+      hr
+      grid-layout(:layout.sync="layout" :row-height="90" :responsive="false" :use-css-transforms="false" @layout-updated="layoutUpdated")
+        grid-item(v-for="(item, key) in layout" v-if="item" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.id" :key="key")
+          pre {{item}}
           dynamic(:type="item.component" :network="item.network" v-loading="item.loading")
 </template>
 <script>
 
 import {mapGetters} from 'vuex'
-import firebase from '../firebase'
-import myLogin from "../components/MyLogin.vue"
-import myLogout from "../components/MyLogout.vue"
-import Dynamic from "../components/Dynamic.vue"
+import firebase from '../../firebase'
+import myLogin from "../../components/MyLogin.vue"
+import myLogout from "../../components/MyLogout.vue"
+import Dynamic from "../../components/Dynamic.vue"
 import VueGridLayout from 'vue-grid-layout'
+import store from "../../store"
 
 const db = firebase.firestore()
 
@@ -58,72 +62,11 @@ export default {
       dialogVisible: false,
       loginVisible: false,
       loading: false,
-      user: null,
       dataReady: false,
       activeNames: [],
       componentList: [],
-      // layout: [],
+      layout: [],
       apps: ["instagram", "google", "twitter", "facebook"],
-      // componentList: {
-      //   twitter: [
-      //     {
-      //       name: "Followers",
-      //       desc: "Muestra el numero de followers",
-      //       component: {
-      //         component: "FollowersCount",
-      //         network: "twitter",
-      //         hidden: false,
-      //         pinned: false,
-      //         x: 0,
-      //         y: 0,
-      //         w: 2,
-      //         h: 1
-      //       }
-      //     },
-      //     {
-      //       name: "Following",
-      //       desc: "Muestra el numero de following",
-      //       component: {
-      //         component: "FollowingCount",
-      //         network: "twitter",
-      //         hidden: false,
-      //         pinned: false,
-      //         x: 0,
-      //         y: 0,
-      //         w: 2,
-      //         h: 1
-      //       }
-      //     },
-      //     {
-      //       name: "Tweets",
-      //       desc: "Muestra el numero de tweets",
-      //       component: {
-      //         component: "TweetsCount",
-      //         network: "twitter",
-      //         hidden: false,
-      //         pinned: false,
-      //         x: 0,
-      //         y: 0,
-      //         w: 2,
-      //         h: 1
-      //       }
-      //     },
-      //     {
-      //       name: "Favoritos",
-      //       desc: "Muestra el numero de tweets marcados como favorito",
-      //       component: {
-      //         component: "FavouritesCount",
-      //         network: "twitter",
-      //         hidden: false,
-      //         pinned: false,
-      //         x: 0,
-      //         y: 0,
-      //         w: 2,
-      //         h: 1
-      //       }
-      //     }
-      //   ]
-      // }
     }
   },
   computed: {
@@ -134,43 +77,60 @@ export default {
     twitterUid(){
       return this.$store.getters.provider("twitter").uid
     },
-    layout: {
+    user(){
+      return this.$store.getters.user
+    },
+    layoutFromStore: {
       get(){
-        return this.$store.getters.layout
+        let layout = this.$store.getters.layout
+        layout = this.copyObject(layout)
+        console.log("get layout", layout)
+        return layout
       },
-      set(val){
-        let ret = this.copyObject(val)
-        console.log("setter", ret)
-        this.layout.push(ret)
-
+      set(value){
+        let val = this.copyObject(value)
+        console.log("set layout", value)
+        this.layout.push(val)
         this.$store.dispatch('update_layout', this.layout)
       }
     }
   },
+  watch: {
+    layoutFromStore(val){
+      if(val){
+        this.layout = this.copyObject(this.layoutFromStore)
+      }
+    }
+  },
   methods: {
-    admin(){
-      this.$router.push({name: "admin"})
-    },
     status(client){
       return this.$store.getters.status(client)
     },
     reset(){
-      // this.$store.commit('SET_LAYOUT', [])
       this.$store.dispatch('update_layout', [])
     },
     copyObject(obj){
       return JSON.parse(JSON.stringify(obj))
     },
     addWidget(component){
-      this.layout = this.copyObject(component)
-      // this.$store.dispatch('update_layout', this.layout)
+      this.layoutFromStore  = component
       this.dialogVisible = false
     },
     update(){
       this.$store.dispatch('updateDataSource', {endpoint: "twitter/users", param: this.twitterUid})
     },
     layoutUpdated(layout){
-      this.$store.dispatch('update_layout', layout)
+      console.log(layout)
+      let filtered = layout.map(item => {
+        return {
+          x: item.x,
+          y: item.y,
+          w: item.w,
+          h: item.h,
+          i: item.id
+        }
+      })
+      this.$store.dispatch('update_layout', filtered)
     },
     getComponents(network){
       let ret = this.componentList.filter(item => {
@@ -179,15 +139,10 @@ export default {
       return ret
     }
   },
-  // firestore(){
-  //   return {
-  //     componentList: db.collection("components")
-  //   }
-  // },
-  mounted(){
+  created(){
+    this.layout = this.copyObject(this.layoutFromStore)
     this.$bind("componentList", db.collection("components")).then((doc) => {
       this.dataReady = true
-      // console.log("doc", doc)
     })
   }
 }

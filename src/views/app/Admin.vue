@@ -54,7 +54,7 @@
           el-button(type="danger" size="mini" icon="el-icon-delete" v-on:click="removeComponent(scope.row.id)") Remove
 </template>
 <script>
-import firebase from '../firebase'
+import firebase from '../../firebase'
 const db = firebase.firestore()
 export default{
   name: "admin",

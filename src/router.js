@@ -5,8 +5,8 @@ import 'firebase/auth'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
-import App from './views/App.vue'
-import Admin from './views/Admin.vue'
+import App from './views/app/App.vue'
+import Admin from './views/app/Admin.vue'
 import twitterQp from './views/qp/Twitter.vue'
 
 Vue.use(Router)
