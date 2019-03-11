@@ -8,6 +8,7 @@ import Register from './views/Register.vue'
 import App from './views/app/App.vue'
 import Admin from './views/app/Admin.vue'
 import twitterQp from './views/qp/Twitter.vue'
+import dailyQp from './views/qp/Daily.vue'
 
 Vue.use(Router)
 
@@ -61,6 +62,15 @@ const router = new Router({
       path: '/twitter-qp',
       name: 'twitterQp',
       component: twitterQp,
+      meta: {
+        requiresAuth: true,
+        layout: 'sidebar'
+      }
+    },
+    {
+      path: '/daily-qp',
+      name: 'dailyQp',
+      component: dailyQp,
       meta: {
         requiresAuth: true,
         layout: 'sidebar'

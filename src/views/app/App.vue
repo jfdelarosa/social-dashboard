@@ -31,8 +31,20 @@
     div(v-if="!loading && layout.length")
       pre {{layoutFromStore}}
       hr
-      grid-layout(:layout.sync="layout" :row-height="90" :responsive="false" :use-css-transforms="false" @layout-updated="layoutUpdated")
-        grid-item(v-for="(item, key) in layout" v-if="item" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.id" :key="key")
+      grid-layout(
+        :layout.sync="layout"
+        :row-height="90"
+        :responsive="false"
+        :use-css-transforms="false"
+        @layout-updated="layoutUpdated")
+        grid-item(
+          v-for="(item, key) in layout"
+          v-if="item"
+          :x="item.x"
+          :y="item.y"
+          :w="item.w"
+          :h="item.h"
+          :i="item.id")
           pre {{item}}
           dynamic(:type="item.component" :network="item.network" v-loading="item.loading")
 </template>
@@ -113,7 +125,7 @@ export default {
       return JSON.parse(JSON.stringify(obj))
     },
     addWidget(component){
-      this.layoutFromStore  = component
+      this.layoutFromStore = component
       this.dialogVisible = false
     },
     update(){
@@ -139,8 +151,12 @@ export default {
       return ret
     }
   },
+  mounted(){
+    let layout = this.$store.getters.layout
+    layout = this.copyObject(layout)
+    this.layout = layout
+  },
   created(){
-    this.layout = this.copyObject(this.layoutFromStore)
     this.$bind("componentList", db.collection("components")).then((doc) => {
       this.dataReady = true
     })

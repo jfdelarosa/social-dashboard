@@ -11,6 +11,9 @@ el-container.app
       el-menu-item(v-if="user && user.email.includes('@questionpro.com')" index="twitterQp" :route="{name: 'twitterQp'}")
         font-awesome-icon.fa-menu(:icon="['fab', 'twitter']")
         | Tweets
+      el-menu-item(v-if="user && user.email.includes('@questionpro.com')" index="dailyQp" :route="{name: 'dailyQp'}")
+        i.el-icon-message
+        | Daily
       el-submenu(index='2')
         template(slot='title')
           i.el-icon-setting
