@@ -2,6 +2,7 @@
   div
     div(style="margin-bottom: 1rem")
       el-date-picker(v-model="range" type="daterange" align="right" start-placeholder="Start Date" end-placeholder="End Date")
+      el-button(v-on:click="test") Test
       div(style="float: right")
         el-button(v-on:click="do_search" v-if="range.length == 2" icon="el-icon-search" type="success") Search
         el-button(v-on:click="showDialog = true" icon="el-icon-setting") Manage users
@@ -61,6 +62,9 @@ export default{
     }
   },
   methods: {
+    test(){
+      console.log(this.range);
+    },
     add(){
       db.collection("qp_twitter").add({
         username: this.username.toLowerCase()
@@ -111,7 +115,15 @@ export default{
     count_tweets(data, user){
       let filterByDate = data.filter(tweet => {
         let date = new Date(tweet.created_at)
-        return date >= this.range[0] && date <= this.range[1]
+        let r1 = this.range[0]
+        let r2 = this.range[1]
+        let max = new Date(r2.toString())
+        
+        max.setHours(max.getHours() + 23)
+        max.setMinutes(max.getMinutes() + 59)
+
+        console.log(r1, max)
+        return date >= r1 && date <= max
       })
 
       let filteredTweets = filterByDate.map(tweet => {

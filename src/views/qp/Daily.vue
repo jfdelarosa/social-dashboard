@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    el-row(:gutter="20")
+    //- el-row(:gutter="20")
       el-col(:span="8")
         h3 Twitter
         el-input(size="small" placeholder="Titulo" v-model="network.twitter.title")
