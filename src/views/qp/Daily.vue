@@ -17,23 +17,23 @@
       el-tab-pane(label="Preview" name="view")
         medium-editor(:text='code' :options='options' v-on:edit='processEditOperation' custom-tag='div')
       el-tab-pane(label="HTML" name="html")
-        el-input(type="textarea" :rows="12" v-bind:value="code" :readonly="true")
+        codemirror(v-model="code" :options="cMoptions")
+        //- el-input(type="textarea" :rows="12" v-bind:value="code" :readonly="true")
 </template>
 <script>
 import firebase from '../../firebase'
 import vueMediumEditor from 'vue2-medium-editor'
+import { codemirror } from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
+
 export default{
   components: {
-    'medium-editor': vueMediumEditor
+    'medium-editor': vueMediumEditor,
+    'codemirror': codemirror
   },
-  computed:{
-    code: {
-      get(){
-        return this.doMail()
-      },
-      set(val){
-        this.doMail(val)
-      }
+  computed: {
+    codemirror() {
+      return this.$refs.myCm.codemirror
     }
   },
   data(){
@@ -43,6 +43,15 @@ export default{
         toolbar: {
           buttons: ['bold', 'italic', 'underline', 'anchor', 'center']
         }
+      },
+      cMoptions: {
+        tabSize: 4,
+        styleActiveLine: true,
+        lineNumbers: true,
+        line: true,
+        mode: 'text/javascript',
+        lineWrapping: true,
+        theme: 'default'
       },
       activeName: 'view',
       network: {
@@ -58,15 +67,8 @@ export default{
           title: "",
           url: ""
         }
-      }
-    }
-  },
-  methods: {
-    processEditOperation(operation) {
-      this.code = operation.api.origElements.innerHTML
-    },
-    doMail(social){
-      return `<table style="margin: 0;padding: 0;font-size: 100%;font-family: 'Avenir Next', &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;line-height: 1.65;height: 100%; background: #D6E3F5; background-image: url('https://www.questionpro.com/qp_userimages/sub-3/2917616/textura_2.png'); background-size: 120px; background-repeat: repeat; -webkit-font-smoothing: antialiased;-webkit-text-size-adjust: none;width: 100% !important;">
+      },
+      code: `<table style="margin: 0;padding: 0;font-size: 100%;font-family: 'Avenir Next', &quot;Helvetica Neue&quot;, &quot;Helvetica&quot;, Helvetica, Arial, sans-serif;line-height: 1.65;height: 100%; background: #D6E3F5; background-image: url('https://www.questionpro.com/qp_userimages/sub-3/2917616/textura_2.png'); background-size: 120px; background-repeat: repeat; -webkit-font-smoothing: antialiased;-webkit-text-size-adjust: none;width: 100% !important;">
     
   <tbody>
       
@@ -177,6 +179,14 @@ export default{
     
 </tbody>
 </table>`
+    }
+  },
+  methods: {
+    processEditOperation(operation) {
+      this.code = operation.api.origElements.innerHTML
+    },
+    doMail(social){
+      return ""
     }
   }
 }
