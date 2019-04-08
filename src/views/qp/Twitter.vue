@@ -131,7 +131,11 @@ export default {
         return date >= r1 && date <= max;
       });
 
-      let filteredTweets = filterByDate.map(tweet => {
+      let filterByQuotes = filterByDate.filter(tweet => {
+        return !tweet.is_quote_status;
+      });
+
+      let filteredTweets = filterByQuotes.map(tweet => {
         if (!tweet.entities) {
           return false;
         } else {
