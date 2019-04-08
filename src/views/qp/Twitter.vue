@@ -24,7 +24,9 @@
       el-table-column(type="index" label="#" align="center")
       el-table-column(label="Username")
         template(slot-scope="scope")
-          a(:href="'http://twitter.com/' + scope.row.username" target="_BLANK") {{scope.row.username}}
+          a(:href="'http://twitter.com/' + scope.row.username" target="_BLANK")
+            | {{scope.row.username}}
+            span(v-if="scope.row.suspended")  (Cuenta suspendida)
       el-table-column(prop="free" label="Free tweets" align="center")
       el-table-column(prop="qpro" label="QuestionPro tweets" align="center")
 </template>
@@ -96,6 +98,13 @@ export default {
           this.loading.splice(index, 1);
           if (!res.data.error) {
             this.count_tweets(res.data, current);
+          } else {
+            this.count.push({
+              username: current,
+              free: 0,
+              qpro: 0,
+              suspended: true
+            });
           }
           this.current = this.current + 1;
           if (this.current < this.allUsers.length) {
@@ -119,7 +128,6 @@ export default {
         max.setHours(max.getHours() + 23);
         max.setMinutes(max.getMinutes() + 59);
 
-        console.log(r1, max);
         return date >= r1 && date <= max;
       });
 
