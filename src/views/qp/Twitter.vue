@@ -140,7 +140,8 @@ export default {
           return false;
         } else {
           let filteredHashtags = tweet.entities.hashtags.filter(hash => {
-            return hash.text.toUpperCase() == "QUESTIONPROLATAM";
+            let hasthag = hash.text.toUpperCase();
+            return (hashtag == "QUESTIONPROLATAM" || hashtag == "QUESTIONPRO");
           });
           return filteredHashtags;
         }
