@@ -6,7 +6,7 @@
           el-input(v-model="hashtag" placeholder="Hashtag")
         el-col(:span="2")
           el-button(v-on:click="search" style="width: 100%" type="success") Search
-    el-table(:data="tweetCount" :default-sort="{prop: 'questionpro_es', order: 'descending'}" style="width: 100%")
+    el-table(:data="tweetCount" :default-sort="{prop: 'questionpro_es', order: 'descending'}" style="width: 100%" v-if="tweetCount.length > 0")
       el-table-column(prop="screen_name" label="Username" sortable)
       el-table-column(prop="questionpro_es" label="questionpro_es Tweet Count" sortable)
       el-table-column(prop="qpro_live" label="qpro_live Tweet Count" sortable)
