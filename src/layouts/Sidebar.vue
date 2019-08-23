@@ -14,6 +14,9 @@ el-container.app
       el-menu-item(v-if="user && user.email.includes('@questionpro.com')" index="dailyQp" :route="{name: 'dailyQp'}")
         i.el-icon-message
         | Daily
+      el-menu-item(v-if="user && user.email.includes('@questionpro.com')" index="hashtagQp" :route="{name: 'hashtagQp'}")
+        font-awesome-icon.fa-menu(:icon="['fab', 'twitter']")
+        | Search Hashtag
       el-submenu(index='2')
         template(slot='title')
           i.el-icon-setting
@@ -28,71 +31,73 @@ el-container.app
         span.love ♥
 </template>
 <script>
-import firebase from '../firebase'
+import firebase from "../firebase";
 export default {
   computed: {
-    user(){
-      return this.$store.getters.user
+    user() {
+      return this.$store.getters.user;
     },
-    layout(){
-      return this.$store.getters.layout
+    layout() {
+      return this.$store.getters.layout;
     }
   },
   methods: {
-    logout(){
-      firebase.auth().signOut()
-      .then(() => {
-        this.$store.commit('SET_USER', null)
-        this.$router.push({ name: 'home' })
-      })
-      .catch((error)=> {
-        console.log(error)
-      });
-    },
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$store.commit("SET_USER", null);
+          this.$router.push({ name: "home" });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
-}
+};
 </script>
 <style scoped>
-.el-menu{
+.el-menu {
   height: 100%;
   border: none;
 }
-.w100{
+.w100 {
   width: 100%;
 }
-.p0 .el-card__body{
-  padding: 0!important;
+.p0 .el-card__body {
+  padding: 0 !important;
 }
-.el-card__body{
-  overflow: hidden!important;
-  clear: both!important;
+.el-card__body {
+  overflow: hidden !important;
+  clear: both !important;
 }
-.fr{
+.fr {
   float: right;
 }
-.bw{
-  word-break: break-word!important;
+.bw {
+  word-break: break-word !important;
 }
-.mb{
-  margin-bottom: 1rem!important;
+.mb {
+  margin-bottom: 1rem !important;
 }
-.w0{
-  width: 0!important;
+.w0 {
+  width: 0 !important;
 }
-.el-dialog__body{
-  padding: 0 20px!important;
+.el-dialog__body {
+  padding: 0 20px !important;
 }
-.el-form-item{
+.el-form-item {
   margin-bottom: 1rem;
 }
-.el-form-item__label{
+.el-form-item__label {
   height: 2rem;
 }
-.el-footer{
+.el-footer {
   opacity: 0.6;
   text-align: center;
 }
-.love{
+.love {
   color: red;
   font-weight: bold;
   font-size: 1.1rem;
