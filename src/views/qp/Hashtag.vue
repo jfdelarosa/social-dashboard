@@ -72,7 +72,9 @@ export default {
       this.parseData(data);
       if (data.search_metadata.hasOwnProperty("next_results")) {
         let max_id = this.getId(data.search_metadata.next_results);
-        this.searchMore(max_id);
+        setTimeout(() => {
+          this.searchMore(max_id);
+        }, 1000);
       } else {
         this.loading = false;
       }
