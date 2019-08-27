@@ -5,6 +5,7 @@
       div(style="float: right")
         el-button(v-on:click="do_search" v-if="range.length == 2" icon="el-icon-search" type="success") Search
         el-button(v-on:click="showDialog = true" icon="el-icon-setting") Manage users
+        el-input(v-model="hashtag" placeholder="Hashtag")
     el-dialog(title="Manage users" :visible.sync="showDialog")
       el-form(v-on:submit.native.prevent="add")
         el-row(:gutter="20")
@@ -37,6 +38,7 @@ export default {
   data() {
     return {
       data: null,
+      hashtag: "QuestionProLATAM",
       username: "",
       current: 0,
       loading: [],
@@ -141,7 +143,7 @@ export default {
         } else {
           let filteredHashtags = tweet.entities.hashtags.filter(hash => {
             let hashtag = hash.text.toUpperCase();
-            return hashtag == "QUESTIONPROLATAM" || hashtag == "QUESTIONPRO";
+            return (hashtag == "QUESTIONPROLATAM") == this.hashtag;
           });
           return filteredHashtags;
         }
