@@ -1,11 +1,14 @@
 <template lang="pug">
   div
     div(style="margin-bottom: 1rem")
-      el-date-picker(v-model="range" type="daterange" align="right" start-placeholder="Start Date" end-placeholder="End Date")
+    el-row(:gutter="20")
+      el-col(:span="8")
+        el-date-picker(v-model="range" type="daterange" align="right" start-placeholder="Start Date" end-placeholder="End Date")
+      el-col(:span="5")
+        el-input(v-model="hashtag" placeholder="Hashtag")
       div(style="float: right")
         el-button(v-on:click="do_search" v-if="range.length == 2" icon="el-icon-search" type="success") Search
         el-button(v-on:click="showDialog = true" icon="el-icon-setting") Manage users
-        el-input(v-model="hashtag" placeholder="Hashtag")
     el-dialog(title="Manage users" :visible.sync="showDialog")
       el-form(v-on:submit.native.prevent="add")
         el-row(:gutter="20")
