@@ -5,8 +5,11 @@
         el-row(:gutter="20")
           el-col(:span="3")
             el-checkbox(v-model="autoUpdate" border) Auto update
+          el-col(:span="3" v-show="autoUpdate")
+            el-input-number(v-model="time" :min="1" :max="30" style="width: 100%")
           el-col(:span="5")
             el-input(v-model="hashtag" placeholder="Hashtag")
+              template(slot="prepend") #
           el-col(:span="3")
             el-button(v-on:click="search" style="width: 100%" type="success") Search
     el-table(:data="tweetCount" :default-sort="{prop: 'questionpro_es', order: 'descending'}" style="width: 100%" v-if="tweetCount.length > 0")
@@ -24,6 +27,7 @@ export default {
     latest: null,
     loading: false,
     globalCount: 0,
+    time: 15,
     tweetCount: []
   }),
   methods: {
@@ -84,6 +88,7 @@ export default {
       }
     },
     doSearch() {
+      this.tweetCount = [];
       this.loading = true;
       this.$http
         .get(`/twitter/hashtag/${this.hashtag}`)
@@ -97,9 +102,10 @@ export default {
     search() {
       this.doSearch();
       if (this.autoUpdate) {
+        let updateTime = this.time * 60 * 1000;
         setInterval(() => {
           this.doSearch();
-        }, 15 * 60 * 1000);
+        }, updateTime);
       }
     },
     searchMore(id) {
