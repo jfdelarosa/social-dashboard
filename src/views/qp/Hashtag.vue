@@ -1,11 +1,14 @@
 <template lang="pug">
   div
     el-form(v-on:submit.native.prevent="search" v-loading="loading" style="margin-bottom: 1rem;")
-      el-row(:gutter="20")
-        el-col(:span="5")
-          el-input(v-model="hashtag" placeholder="Hashtag")
-        el-col(:span="2")
-          el-button(v-on:click="search" style="width: 100%" type="success") Search
+      el-card
+        el-row(:gutter="20")
+          el-col(:span="3")
+            el-checkbox(v-model="autoUpdate" border) Auto update
+          el-col(:span="5")
+            el-input(v-model="hashtag" placeholder="Hashtag")
+          el-col(:span="3")
+            el-button(v-on:click="search" style="width: 100%" type="success") Search
     el-table(:data="tweetCount" :default-sort="{prop: 'questionpro_es', order: 'descending'}" style="width: 100%" v-if="tweetCount.length > 0")
       el-table-column(prop="screen_name" label="Username" sortable)
       el-table-column(prop="questionpro_es" label="questionpro_es Tweet Count" sortable)
@@ -16,7 +19,8 @@
 <script>
 export default {
   data: () => ({
-    hashtag: "TalkIN19",
+    hashtag: "IdeasAMAI",
+    autoUpdate: false,
     latest: null,
     loading: false,
     globalCount: 0,
@@ -79,7 +83,7 @@ export default {
         this.loading = false;
       }
     },
-    search() {
+    doSearch() {
       this.loading = true;
       this.$http
         .get(`/twitter/hashtag/${this.hashtag}`)
@@ -89,6 +93,14 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+    search() {
+      this.doSearch();
+      if (this.autoUpdate) {
+        setInterval(() => {
+          this.doSearch();
+        }, 15 * 60 * 1000);
+      }
     },
     searchMore(id) {
       this.$http
